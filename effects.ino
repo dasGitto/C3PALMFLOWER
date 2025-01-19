@@ -1,10 +1,9 @@
-// effects.ino
 #include <FastLED.h>
 
 // Declare the heat array if it is not already declared in another file
 extern uint8_t heat[NUM_LEDS];  // External declaration if it's in another file
 
-// Declare LED array
+// Declare the LED array using FastLED
 extern CRGB leds[NUM_LEDS];
 
 void fireEffect() {
@@ -30,10 +29,15 @@ void fireEffect() {
     leds[sparkPos] = CRGB(random8(180, 255), random8(100, 180), 0); // Sparkle color (orange to yellow)
   }
 
-  // Map heat values to colors
+  // Map heat values to colors using FastLED's HeatColor function
   for (int i = 0; i < NUM_LEDS; i++) {
     leds[i] = HeatColor(heat[i]);  // Map heat to color (fire-like gradient)
   }
 
   FastLED.show();  // Update the LED strip
 }
+
+void meteorEffect();
+void strobeEffect();
+void glowEffect();
+void randomEffect();
