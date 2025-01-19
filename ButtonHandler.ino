@@ -75,7 +75,10 @@ void updateLEDStrip() {
     // Logic to update the LED strip based on the current state
     FastLED.clear();
     for (int i = 0; i < NUM_LEDS; i++) {
-        if (currentMode == FIRE) leds[i] = CRGB(255, 0, 0);   // Fire effect
+        if (currentMode == FIRE){
+          Serial.println("FIREMODE SELECTED")
+          fireEffect();
+        }
         else if (currentMode == METEOR) leds[i] = CRGB(0, 255, 0); // Meteor effect
         else if (currentMode == STROBE) leds[i] = CRGB(0, 0, 255); // Strobe effect
         else if (currentMode == GLOW) leds[i] = CRGB(255, 255, 0); // Glow effect
