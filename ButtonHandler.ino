@@ -1,11 +1,8 @@
 #include <Arduino.h>
 #include <FastLED.h>
-<<<<<<< Updated upstream
 
 // Enum for modes
 enum Mode { FIRE, METEOR, STROBE, GLOW, RANDOM };
-=======
->>>>>>> Stashed changes
 
 // Shared constants
 const int DEBOUNCE_DELAY = 200;         // Debounce delay in ms

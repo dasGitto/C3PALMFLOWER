@@ -2,13 +2,9 @@
 
 #define NUM_LEDS 16  // Number of LEDs in your strip
 
-<<<<<<< Updated upstream
-// Declare the LED array using FastLED
-extern CRGB leds[NUM_LEDS];
-=======
 extern CRGB leds[NUM_LEDS];  // Declare the FastLED array
 uint8_t heat[NUM_LEDS];  // Declare the heat array for fire effect
->>>>>>> Stashed changes
+
 
 void fireEffect() {
   // Cool down every cell a little
