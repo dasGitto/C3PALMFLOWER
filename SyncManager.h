@@ -1,9 +1,6 @@
 #ifndef SYNC_MANAGER_H
 #define SYNC_MANAGER_H
 
-#include <vector>
-#include <Arduino.h>
-
 enum SyncState {
     NO_SYNC,
     SYNC_SEARCH,        // discover devices to sync with

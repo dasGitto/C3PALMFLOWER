@@ -3,11 +3,7 @@
 #include "ButtonHandler.h"
 #include "Effects.h"
 #include "SyncManager.h"
-
-// Define pins and number of LEDs
-#define BUTTON_PIN D0   // Xiao ESP32C3 GPIO0
-#define PIN D10         // Xiao ESP32C3 GPIO10
-#define NUM_LEDS 16     // Number of LEDs in the strip
+#include "Settings.h"
 
 // Create an array to represent the LED strip
 CRGB leds[NUM_LEDS];
@@ -26,7 +22,7 @@ void setup() {
     attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), buttonISR, CHANGE);
 
     // Initialize the FastLED library
-    FastLED.addLeds<WS2812, PIN, GRB>(leds, NUM_LEDS);
+    FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
     FastLED.clear();  // Turn off all LEDs initially
     FastLED.show();
 

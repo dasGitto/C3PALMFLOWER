@@ -4,7 +4,6 @@
 #include <FastLED.h>
 
 #define NUM_LEDS 16
-extern CRGB leds[NUM_LEDS];
 
 // Effects declarations
 void fireEffect();

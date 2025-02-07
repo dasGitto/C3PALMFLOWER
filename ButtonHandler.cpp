@@ -4,8 +4,8 @@
 #include <FastLED.h>
 #include "Effects.h"
 #include "SyncManager.h"
+#include "Settings.h"
 
-#define BUTTON_PIN D0   // Xiao ESP32C3 GPIO0
 #define DEBOUNCE_DELAY 200
 #define SYNC_HOLD_TIME 3000
 #define SLEEP_HOLD_TIME 10000
@@ -26,8 +26,6 @@ volatile unsigned long buttonHoldStart = 0;
 volatile int currentPage = 0;
 volatile int currentMode = FIRE;
 volatile int pressCount = 0;
-
-extern CRGB leds[NUM_LEDS];
 
 void IRAM_ATTR buttonISR() {
   unsigned long now = millis();

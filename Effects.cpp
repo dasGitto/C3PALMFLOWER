@@ -1,6 +1,8 @@
 #include "Effects.h"
 #include <FastLED.h>
 
+extern CRGB leds[NUM_LEDS];
+
 uint8_t heat[NUM_LEDS];
 
 void fireEffect() {

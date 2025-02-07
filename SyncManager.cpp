@@ -3,12 +3,11 @@
 #include <WiFi.h>
 #include <WiFiUdp.h>
 #include "ButtonHandler.h"
+#include "Settings.h"
 
 #define CON_ATTEMPTS_TIMEOUT 30000
 
 WiFiUDP udp;
-const int udpPort = 12345;
-const char* broadcastIP = "255.255.255.255";  // Send to all devices on network
 
 SyncState currentSyncState = NO_SYNC;
 std::vector<String> syncPeers;
@@ -33,7 +32,7 @@ void startSyncManager() {
     }
 
     deviceID = WiFi.macAddress();
-    udp.begin(udpPort);
+    udp.begin(UDP_PORT);
 }
 
 void toggleSyncMode() {
@@ -52,7 +51,7 @@ void toggleSyncMode() {
 void discoverSyncPeers() {
     if (currentSyncState != SYNC_SEARCH) return;
     String message = "DISCOVER:" + deviceID;
-    udp.beginPacket(broadcastIP, udpPort);
+    udp.beginPacket(BROADCAST_IP, UDP_PORT);
     udp.write((uint8_t*)message.c_str(), message.length());
     udp.endPacket();
 }
@@ -61,7 +60,7 @@ void sendModeUpdate(int mode) {
     if (currentSyncState != SYNC_SEARCH) return;
 
     String message = "MODE:" + String(mode);
-    udp.beginPacket(broadcastIP, udpPort);
+    udp.beginPacket(BROADCAST_IP, UDP_PORT);
     udp.write((uint8_t*)message.c_str(), message.length());
     udp.endPacket();
     Serial.println("Broadcasting Mode: " + String(mode));
