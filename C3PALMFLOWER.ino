@@ -2,11 +2,12 @@
 #include <FastLED.h>
 #include "ButtonHandler.h"
 #include "Effects.h"
+#include "SyncManager.h"
 
 // Define pins and number of LEDs
-#define BUTTON_PIN D0 // Pin for the button
-#define PIN D10       // Pin for the LED strip
-#define NUM_LEDS 16   // Number of LEDs in the strip
+#define BUTTON_PIN D0   // Xiao ESP32C3 GPIO0
+#define PIN D10         // Xiao ESP32C3 GPIO10
+#define NUM_LEDS 16     // Number of LEDs in the strip
 
 // Create an array to represent the LED strip
 CRGB leds[NUM_LEDS];
@@ -16,6 +17,9 @@ void setup() {
     Serial.begin(115200);
     delay(100);
     Serial.println("Serial monitor initialized");
+
+    // Connect to WiFi
+    startSyncManager();
 
     // Configure button pin and attach interrupt
     pinMode(BUTTON_PIN, INPUT_PULLUP);
@@ -37,4 +41,8 @@ void setup() {
 void loop() {
     // Handle button press and update LED strip accordingly
     handleButtonPress();
+
+    if (currentSyncState != NO_SYNC) {
+        handleSyncMessages();  // Listen for mode updates
+    }
 }

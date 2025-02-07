@@ -8,7 +8,7 @@ void IRAM_ATTR buttonISR();
 void handleButtonPress();
 void updateLEDStrip();
 
-// Getter for current mode
+void setCurrentMode(int mode);
 int getCurrentMode();
 
 #endif
