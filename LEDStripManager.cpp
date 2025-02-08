@@ -1,9 +1,25 @@
-#include "Effects.h"
+#include "LEDStripManager.h"
 #include <FastLED.h>
+#include "Settings.h"
 
 extern CRGB leds[NUM_LEDS];
 
+enum Mode { 
+  FIRE,
+  METEOR,
+  STROBE,
+  GLOW,
+  RANDOM 
+};
+
+Mode currentMode = FIRE;
 uint8_t heat[NUM_LEDS];
+
+void nextMode() { currentMode = static_cast<Mode>((currentMode + 1) % 5); }
+void nextPage() { /* Implement page change logic */ }
+void setMode(int modeNum) { currentMode = static_cast<Mode>(modeNum); }
+void turnOn() { /* Implement LED on behavior */ }
+void turnOff() { FastLED.clear(); FastLED.show(); }
 
 void fireEffect() {
     for (int i = 0; i < NUM_LEDS; i++) {
@@ -53,4 +69,20 @@ void randomEffect() {
     for (int i = 0; i < NUM_LEDS; i++) {
         leds[i] = CRGB(random(0, 255), random(0, 255), random(0, 255));
     }
+}
+
+void updateLEDStrip() {
+  FastLED.clear();
+
+  if (currentMode == FIRE) fireEffect();
+  else if (currentMode == METEOR) meteorEffect();
+  else if (currentMode == STROBE) strobeEffect();
+  else if (currentMode == GLOW) glowEffect();
+  else if (currentMode == RANDOM) randomEffect();
+
+  FastLED.show();
+}
+
+int getCurrentMode() {
+  return currentMode;
 }

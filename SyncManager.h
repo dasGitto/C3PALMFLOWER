@@ -7,11 +7,13 @@ enum SyncState {
     SYNC_NETWORK        // device network established
 };
 
+enum SyncAction { NO_ACTION, SET_MODE };
+
 extern SyncState currentSyncState;
 
 void startSyncManager();
 void toggleSyncMode();
-void handleSyncMessages();
+SyncAction readNetworkInput();
 void sendModeUpdate(int mode);
 void discoverSyncPeers();
 

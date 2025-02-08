@@ -2,7 +2,6 @@
 #include <Arduino.h>
 #include "esp_sleep.h"
 #include <FastLED.h>
-#include "Effects.h"
 #include "SyncManager.h"
 #include "Settings.h"
 
@@ -11,20 +10,11 @@
 #define SLEEP_HOLD_TIME 10000
 #define WAKE_HOLD_TIME 2000
 
-// Modes
-enum Mode { FIRE,
-            METEOR,
-            STROBE,
-            GLOW,
-            RANDOM };
-
 // State variables
 volatile unsigned long lastPressTime = 0;
 volatile unsigned long lastReleaseTime = 0;
 volatile bool buttonPressed = false;
 volatile unsigned long buttonHoldStart = 0;
-volatile int currentPage = 0;
-volatile int currentMode = FIRE;
 volatile int pressCount = 0;
 
 void IRAM_ATTR buttonISR() {
@@ -38,57 +28,36 @@ void IRAM_ATTR buttonISR() {
       buttonHoldStart = now;
     }
   } else {
-    lastReleaseTime = now;
+    lastReleaseTime = now; 
     buttonHoldStart = 0;
   }
 }
 
-void handleButtonPress() {
-  unsigned long now = millis();
+ActionType detectButtonInput() {
+    unsigned long now = millis();
 
-  if (buttonHoldStart > 0 && (now - buttonHoldStart > SLEEP_HOLD_TIME)) {
-    FastLED.clear();
-    FastLED.show();
-    Serial.println("Going to sleep");
-    esp_deep_sleep_enable_gpio_wakeup((1ULL << BUTTON_PIN), ESP_GPIO_WAKEUP_GPIO_LOW);
-    esp_deep_sleep_start();
-  } else if (buttonHoldStart > 0 && (now - buttonHoldStart > SYNC_HOLD_TIME)) {
-    toggleSyncMode();
-  }
-
-  if (buttonPressed) {
-    buttonPressed = false;
-
-    if (pressCount == 2 && (now - lastPressTime <= DEBOUNCE_DELAY)) {
-      currentPage = (currentPage + 1) % 3;
-      pressCount = 0;
-      Serial.println("Double tap");
-    } else if (pressCount == 1 && (now - lastPressTime <= DEBOUNCE_DELAY)) {
-      currentMode = (currentMode + 1) % 5;
-      pressCount = 0;
-      Serial.println("Single tap");
+    if (buttonHoldStart > 0 && (now - buttonHoldStart > SLEEP_HOLD_TIME)) {
+        FastLED.clear();
+        FastLED.show();
+        Serial.println("Going to sleep");
+        esp_deep_sleep_enable_gpio_wakeup((1ULL << BUTTON_PIN), ESP_GPIO_WAKEUP_GPIO_LOW);
+        esp_deep_sleep_start();
+        return HOLD_10S;
+    } else if (buttonHoldStart > 0 && (now - buttonHoldStart > SYNC_HOLD_TIME)) {
+        return HOLD_3S;
     }
 
-    updateLEDStrip();
-  }
-}
+    if (buttonPressed) {
+        buttonPressed = false;
 
-void updateLEDStrip() {
-  FastLED.clear();
+        if (pressCount == 2) {
+            pressCount = 0;
+            return DOUBLE_TAP;
+        } else if (pressCount == 1) {
+            pressCount = 0;
+            return SINGLE_TAP;
+        }
+    }
 
-  if (currentMode == FIRE) fireEffect();
-  else if (currentMode == METEOR) meteorEffect();
-  else if (currentMode == STROBE) strobeEffect();
-  else if (currentMode == GLOW) glowEffect();
-  else if (currentMode == RANDOM) randomEffect();
-
-  FastLED.show();
-}
-
-int getCurrentMode() {
-  return currentMode;
-}
-
-void setCurrentMode(int mode) {
-  currentMode = mode;
+    return NONE;
 }

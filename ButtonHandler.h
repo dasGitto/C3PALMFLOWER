@@ -1,14 +1,11 @@
 #ifndef BUTTON_HANDLER_H
 #define BUTTON_HANDLER_H
 
-#include <FastLED.h>
+#include <Arduino.h>
 
-// Button press handler functions
+enum ActionType { NONE, SINGLE_TAP, DOUBLE_TAP, HOLD_2S, HOLD_3S, HOLD_10S };
+
 void IRAM_ATTR buttonISR();
-void handleButtonPress();
-void updateLEDStrip();
-
-void setCurrentMode(int mode);
-int getCurrentMode();
+ActionType detectButtonInput();
 
 #endif

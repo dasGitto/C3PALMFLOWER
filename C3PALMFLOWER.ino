@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <FastLED.h>
 #include "ButtonHandler.h"
-#include "Effects.h"
+#include "LEDStripManager.h"
 #include "SyncManager.h"
 #include "Settings.h"
 
@@ -35,10 +35,37 @@ void setup() {
 }
 
 void loop() {
-    // Handle button press and update LED strip accordingly
-    handleButtonPress();
+        // 🔹 Detect button input first
+    ActionType buttonAction = detectButtonInput();
+    if (buttonAction != NONE) {
+        switch (buttonAction) {
+            case SINGLE_TAP:
+                nextMode();
+                break;
+            case DOUBLE_TAP:
+                nextPage();
+                break;
+            case HOLD_3S:
+                toggleSyncMode();  // Toggle sync mode instead of LED update
+                break;
+            case HOLD_10S:
+                turnOff();
+                break;
+            default:
+                break;
+        }
+    }
 
-    if (currentSyncState != NO_SYNC) {
-        handleSyncMessages();  // Listen for mode updates
+    // 🔹 Then check for network sync input
+    SyncAction syncAction;
+    int modeNum;
+    syncAction = readNetworkInput();
+
+    if (syncAction == SET_MODE) {
+        setMode(modeNum);
+    }
+
+    if (buttonAction || syncAction) {
+      updateLEDStrip();
     }
 }

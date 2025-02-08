@@ -1,13 +1,15 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#define LED_PIN D0        // LED strip pin
-#define NUM_LEDS 30       // Number of LEDs in the strip
-#define BUTTON_PIN D10    // Button input pin
+#include <FastLED.h>
 
-#define UDP_PORT 4210     // UDP communication port
-#define BROADCAST_IP "255.255.255.255" // Broadcast address for syncing
+#define LED_PIN D0
+#define NUM_LEDS 30
+#define BUTTON_PIN D10
+
+extern CRGB leds[NUM_LEDS];
+
+#define UDP_PORT 4210
+#define BROADCAST_IP "255.255.255.255"
 
 #endif
- 
- 

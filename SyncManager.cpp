@@ -1,5 +1,4 @@
 #include "SyncManager.h"
-#include "Effects.h"  // Needed to update LED modes
 #include <WiFi.h>
 #include <WiFiUdp.h>
 #include "ButtonHandler.h"
@@ -68,8 +67,10 @@ void sendModeUpdate(int mode) {
     currentSyncState = SYNC_NETWORK; // Lock sync network after first mode change
 }
 
-void handleSyncMessages() {
-    if (currentSyncState == NO_SYNC) return;
+SyncAction readNetworkInput() {
+    SyncAction action = NO_ACTION;
+
+    if (currentSyncState == NO_SYNC) return action;
 
     int packetSize = udp.parsePacket();
     if (packetSize) {
@@ -86,8 +87,9 @@ void handleSyncMessages() {
         }
         else if (currentSyncState == SYNC_NETWORK && receivedMsg.startsWith("MODE:")) {
             int newMode = receivedMsg.substring(5).toInt();
-            setCurrentMode(newMode);
-            updateLEDStrip();
+            action = SET_MODE;
         }
     }
+
+    return NO_ACTION;
 }
