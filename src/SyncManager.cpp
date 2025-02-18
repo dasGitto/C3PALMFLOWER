@@ -3,6 +3,7 @@
 #include <WiFiUdp.h>
 #include "ButtonHandler.h"
 #include "Settings.h"
+#include <vector>
 
 #define CON_ATTEMPTS_TIMEOUT 30000
 
